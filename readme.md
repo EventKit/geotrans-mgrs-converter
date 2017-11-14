@@ -53,14 +53,20 @@ $ node-gyp build
 
 Here is an example of the GeotransMgrsConverter in use with the WGS84 datum (specified as `"WGE"` in Geotrans) and the MGRS string `"12UUA8432340791"` (randomly-picked location appr. 80 miles SE of Calgary, Alberta, Canada).
 
-`const converter = require("path/to/geotransMgrsConverter");
+```javascript
+const converter = require("path/to/geotransMgrsConverter");
+
 let myConverter = new converter("WGE");
+
 myConverter.convert("12UUA8432340791")`
-'`
+
+```
 
 The result will be a JSON object as such:
-`{ mgrsString: '12UUA8432340791',
+```javascript
+{ mgrsString: '12UUA8432340791',
   latitude: 50.008214725254355,
-  longitude: -112.6143962667272 }`
+  longitude: -112.6143962667272 }
+```
   
 **NOTE**: If you plan on using the original C++ method, keep in mind that Geotrans returns radians. The Radian->Dec. Deg. conversion in this module is done in JavaScript.
