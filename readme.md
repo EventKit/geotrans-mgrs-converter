@@ -5,6 +5,8 @@ The Geotrans MGRS Converter is a NodeJS module that utilizes the [Node-gyp](http
 
 This code has not been tested in Windows.
 
+![Diagram](diagram.png "Diagram")
+
 ### Requirements
    * `python` (`v2.7` recommended, `v3.x.x` is __*not*__ supported)
    * `make`
