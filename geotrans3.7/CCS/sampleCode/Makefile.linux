@@ -1,0 +1,50 @@
+###############################################################################
+#
+#     CLASSIFICATION:  UNCLASSIFIED
+#
+#     FILENAME:   Makefile.linux
+#
+#     DESCRIPTION:
+#
+#     This Makefile is used by make to build the CoordinateConversionSample
+#     test driver on Redhat Linux 64-bit using the GNU g++ compiler.
+#
+#     NOTES:
+#
+###############################################################################
+
+.SUFFIXES: .cpp
+
+CC = g++
+
+C++FLAGS	= -c -w -fPIC -m64 -pthread -Wno-deprecated
+
+INCDIRS = -I. \
+		-I../src/CoordinateConversion \
+		-I../src/dtcc/CoordinateSystemParameters \
+		-I../src/dtcc/CoordinateSystems \
+		-I../src/dtcc/CoordinateTuples \
+		-I../src/dtcc/Enumerations \
+		-I../src/dtcc/Exception \
+		-I../src/dtccz
+
+LDFLAGS	= -ldl -m64 -L../linux_64
+
+LDLIBS		= -lMSPdtcc \
+		-lMSPCoordinateConversionService \
+		-lpthread
+
+
+all:	testCoordinateConversionSample mgrsToGeodetic
+
+testCoordinateConversionSample: testCoordinateConversionSample.o
+	$(CC) testCoordinateConversionSample.o $(LDFLAGS) -o $@ $(LDLIBS)
+
+mgrsToGeodetic: mgrsToGeodetic.cpp
+	$(CC) mgrsToGeodetic.cpp $(LDFLAGS) -o $@ $(LDLIBS) $(INCDIRS)
+
+.cpp.o:
+	$(CC) $(C++FLAGS) $(INCDIRS) $< -o $@
+
+clean:
+	rm -rf *.o testCoordinateConversionSample
