@@ -5,10 +5,10 @@
  * Last updated: 11/14/2017
  */
 
-const setenv= require('setenv');
+//const setenv= require('setenv');
 const native = require('bindings')('native');
 //Required by mgrsToGeodetic.cpp for ellipsoid reference data
-setenv.set('MSPCCS_DATA', 'geotrans3.7/data');
+//setenv.set('MSPCCS_DATA', 'geotrans3.7/data');
 
 class MgrsConverter {
     constructor(datum){
