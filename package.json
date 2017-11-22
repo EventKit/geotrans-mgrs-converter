@@ -9,6 +9,9 @@
     "node-addon-api": "^0.6.3",
     "setenv": "^1.0.3"
   },
+  "scripts":{
+    "preinstall": "./download_geotrans.sh"
+  },
   "author": "Gibran Parvez",
   "license": "ISC"
 }
