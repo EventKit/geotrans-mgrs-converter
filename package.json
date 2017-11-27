@@ -10,7 +10,7 @@
     "setenv": "^1.0.3"
   },
   "scripts":{
-    "preinstall": "./download_geotrans.sh && source ./install.sh && node-gyp configure build"
+    "preinstall": "./download_geotrans.sh && source install.sh && node-gyp configure build"
   },
   "author": "Gibran Parvez",
   "license": "ISC"
