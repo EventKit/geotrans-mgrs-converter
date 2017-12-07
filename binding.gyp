@@ -28,7 +28,7 @@
       "cflags": ["-fexceptions"],
       "cflags_cc": ["-fexceptions", "-Wno-deprecated"],
       "defines": ["NAPI_CPP_EXCEPTIONS"]
-      ]
+      
     }
   ]
 }
