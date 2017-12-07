@@ -25,15 +25,9 @@
       "ldflags": [
           "-L<(module_root_dir)/geotrans3.7/CCS/linux_64"
       ],
-      "cflags!": ["-fexceptions"],
-      "cflags_cc!": ["-fexceptions", "-Wno-deprecated"],
-      "defines": ["NAPI_CPP_EXCEPTIONS"],
-      'conditions': [
-        ['OS=="linux"', {
-          'xcode_settings': {
-            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
-          }
-        }]
+      "cflags": ["-fexceptions"],
+      "cflags_cc": ["-fexceptions", "-Wno-deprecated"],
+      "defines": ["NAPI_CPP_EXCEPTIONS"]
       ]
     }
   ]
