@@ -22,28 +22,23 @@ class MgrsConverter {
      */
     convert(mgrsString){
         const MGRS = /^(\d{1,2})([C-HJ-NP-X])\s*([A-HJ-NP-Z])([A-HJ-NP-V])\s*(\d{1,5}\s*\d{1,5})$/i;
-        let decDegResult = null;
+        let latitude, longitude;
         if(mgrsString && this._datum && MGRS.test(mgrsString)){
             let conversionResult = this.callLibrary(mgrsString);
-            decDegResult = {
-                "mgrsString": mgrsString,
-                "latitude": this.constructor.radiansToDegrees(conversionResult[0]),
-                "longitude": this.constructor.radiansToDegrees(conversionResult[1])
-            };
+            latitude = this.constructor.radiansToDegrees(conversionResult[0]);
+            longitude = this.constructor.radiansToDegrees(conversionResult[1]);
+            return this.constructor.generateJSON(mgrsString, latitude, longitude);
         }
         else{
             console.error("Unable to convert.");
             if(mgrsString){
                 console.log(mgrsString + " is not a valid MGRS coordinate.");
             }
-            decDegResult = {
-                "mgrsString": mgrsString || "No MGRS coordinate supplied",
-                "latitude": null,
-                "longitude": null
-            };
-
+            else{
+                console.log("No MGRS coordinate supplied");
+            }
+            return null;
         }
-        return decDegResult;
     }
     /**
     * Simple converter from radians to degrees.
@@ -52,6 +47,21 @@ class MgrsConverter {
     static radiansToDegrees(radians){
        let pi = Math.PI;
        return radians * (180/pi);
+    }
+    /**
+     * GeoJSON Point generator
+     */
+    static generateJSON(mgrsString, latitude, longitude){
+        return {
+            'type':'Feature',
+            'geometry':{
+                'type':'Point',
+                'coordinates': [latitude, longitude]
+            },
+            'properties':{
+                'name':mgrsString
+            }
+        };
     }
     /**
     * Calls C++ function "convertToGeodetic" in mgrsToGeodetic. Values passed in from 'convert' function above.
