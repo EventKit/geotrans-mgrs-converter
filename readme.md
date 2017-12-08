@@ -64,11 +64,21 @@ myConverter.convert("12UUA8432340791")`
 
 ```
 
-The result will be a JSON object as such:
+The result will be a GeoJSON object as such:
 ```javascript
-{ mgrsString: '12UUA8432340791',
-  latitude: 50.008214725254355,
-  longitude: -112.6143962667272 }
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [
+      50.00105275281522,
+      -112.61869345019069
+    ]
+  },
+  "properties": {
+    "name": "12UUA8440"
+  }
+}
 ```
   
 **NOTE**: If you plan on using the original C++ method, keep in mind that Geotrans returns radians. The Radian->Dec. Deg. conversion in this module is done in JavaScript.
