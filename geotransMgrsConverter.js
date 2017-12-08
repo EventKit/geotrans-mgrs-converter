@@ -14,14 +14,16 @@ const native = require('bindings')('native');
 class MgrsConverter {
     constructor(datum){
         this._datum = datum;
+        
     }
     /**
      * Convert function. Primary usage of this module.
      * @param {string} mgrsString - Alpha-numeric system for expressing UTM / UPS coordinates.
      */
     convert(mgrsString){
+        const MGRS = /^(\d{1,2})([C-HJ-NP-X])\s*([A-HJ-NP-Z])([A-HJ-NP-V])\s*(\d{1,5}\s*\d{1,5})$/i;
         let decDegResult = null;
-        if(mgrsString && this._datum){
+        if(mgrsString && this._datum && MGRS.test(mgrsString)){
             let conversionResult = this.callLibrary(mgrsString);
             decDegResult = {
                 "mgrsString": mgrsString,
@@ -30,8 +32,16 @@ class MgrsConverter {
             };
         }
         else{
-            console.error("MGRS string and datum must be defined");
-            return null;
+            console.error("Unable to convert.");
+            if(mgrsString){
+                console.log(mgrsString + " is not a valid MGRS coordinate.");
+            }
+            decDegResult = {
+                "mgrsString": mgrsString || "No MGRS coordinate supplied",
+                "latitude": null,
+                "longitude": null
+            };
+
         }
         return decDegResult;
     }
