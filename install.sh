@@ -1,5 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
-export LD_LIBRARY_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/geotrans3.7/CCS/linux_64
+LD_LIBRARY_PATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/geotrans3.7/CCS/linux_64
+export LD_LIBRARY_PATH
 #sudo dnf install -y libstdc++.i686
-export MSPCCS_DATA=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/geotrans3.7/data
+MSPCCS_DATA=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/geotrans3.7/data
+export MSPCCS_DATA
