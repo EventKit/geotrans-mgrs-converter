@@ -8,7 +8,7 @@ const converter = require("./geotransMgrsConverter");
 //setenv.set('MSPCCS_DATA', 'geotrans3.7/data');
 
 //Constant for test
-EXAMPLE_MGRS_STRING = "12UUA8432340791";
+EXAMPLE_MGRS_STRING = "12UUA843234079";
 EXAMPLE_DATUM = "WGE";
 
 //Instantiate new converter

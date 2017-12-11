@@ -21,9 +21,8 @@ class MgrsConverter {
      * @param {string} mgrsString - Alpha-numeric system for expressing UTM / UPS coordinates.
      */
     convert(mgrsString){
-        const MGRS = /^(\d{1,2})([C-HJ-NP-X])\s*([A-HJ-NP-Z])([A-HJ-NP-V])\s*(\d{1,5}\s*\d{1,5})$/i;
         let latitude, longitude;
-        if(mgrsString && this._datum && MGRS.test(mgrsString)){
+        if(mgrsString && this._datum && this.constructor.isValid(mgrsString)){
             let conversionResult = this.callLibrary(mgrsString);
             latitude = this.constructor.radiansToDegrees(conversionResult[0]);
             longitude = this.constructor.radiansToDegrees(conversionResult[1]);
@@ -62,6 +61,24 @@ class MgrsConverter {
                 'name':mgrsString
             }
         };
+    }
+    /**
+     * Validity checker
+     */
+    static isValid(mgrsString){
+        let regex = /^(\d{1,2})([C-HJ-NP-X])\s*([A-HJ-NP-Z])([A-HJ-NP-V])\s*(\d{1,5}\s*\d{1,5})$/i;
+        let firstDigit, valid = false;
+        if(regex.test(mgrsString)){
+            for(let i=mgrsString.length-1; i>=0; i--){
+                if(/^\d+$/.test(mgrsString[i])){
+                    firstDigit = i;
+                }
+            }
+            if(mgrsString.substring(firstDigit).length % 2 === 0){
+                valid = true;
+            }
+        }
+        return valid;
     }
     /**
     * Calls C++ function "convertToGeodetic" in mgrsToGeodetic. Values passed in from 'convert' function above.
