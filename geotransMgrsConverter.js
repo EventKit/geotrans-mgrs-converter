@@ -73,6 +73,9 @@ class MgrsConverter {
                 if(/^\d+$/.test(mgrsString[i])){
                     firstDigit = i;
                 }
+                else{
+                	break;
+                }
             }
             if(mgrsString.substring(firstDigit).length % 2 === 0){
                 valid = true;
