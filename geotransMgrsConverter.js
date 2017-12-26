@@ -22,6 +22,7 @@ class MgrsConverter {
      */
     convert(mgrsString){
         let latitude, longitude;
+        mgrsString = this.constructor.sanitize(mgrsString);
         if(mgrsString && this._datum && this.constructor.isValid(mgrsString)){
             let conversionResult = this.callLibrary(mgrsString);
             latitude = this.constructor.radiansToDegrees(conversionResult[0]);
@@ -82,6 +83,14 @@ class MgrsConverter {
             }
         }
         return valid;
+    }
+    /**
+     * Sanitizer
+     * Make uppercase, remove spaces
+     */
+    static sanitize(mgrsString){
+        mgrsString.toUpperCase();
+        return mgrsString.replace(/\s+/g, '');
     }
     /**
     * Calls C++ function "convertToGeodetic" in mgrsToGeodetic. Values passed in from 'convert' function above.

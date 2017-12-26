@@ -10,10 +10,15 @@ const converter = require("./geotransMgrsConverter");
 //Constant for test
 EXAMPLE_MGRS_STRING = "12UUA843234079";
 EXAMPLE_DATUM = "WGE";
+TEST_STRINGS = ["12UUA843234079", "4CFG","12UUA8440", "18TXM9963493438","12UAZ"]
 
 //Instantiate new converter
 let myMgrsConverter = new converter(EXAMPLE_DATUM);
 
-let exampleResult = myMgrsConverter.convert(EXAMPLE_MGRS_STRING);
+performConvert = function(string){
+    console.log(myMgrsConverter.convert(string));
+};
 
-console.log(exampleResult);
+for(let coord in TEST_STRINGS){
+    performConvert(TEST_STRINGS[coord]);
+}
