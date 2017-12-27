@@ -116,9 +116,14 @@ std::string convertMgrsToGeodetic(std::string mgrsCoordinateInput, std::string d
             geocentricCoords.x(), geocentricCoords.y(), geocentricCoords.z(),
             lat, lon, mslHeight);
     }
-    catch (std::exception& e) {
-        std::cerr << "ERROR: Unexpected exception encountered - "
-                  << e.what() << std::endl;
+    catch(MSP::CCS::CoordinateConversionException &ex) {
+        std::string exceptionString(ex.getMessage());
+        std::string outputString = "ERROR: " + exceptionString;
+        return outputString;
+    }
+    catch(...) {
+        std::string outputString = "ERROR: Unexpected exception encountered.";
+        return outputString;
     }
 
     std::string outputString = std::to_string(lat) + ", " + std::to_string(lon);

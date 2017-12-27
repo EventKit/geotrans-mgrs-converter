@@ -25,9 +25,16 @@ class MgrsConverter {
         mgrsString = this.constructor.sanitize(mgrsString);
         if(mgrsString && this._datum && this.constructor.isValid(mgrsString)){
             let conversionResult = this.callLibrary(mgrsString);
-            latitude = this.constructor.radiansToDegrees(conversionResult[0]);
-            longitude = this.constructor.radiansToDegrees(conversionResult[1]);
-            return this.constructor.generateJSON(mgrsString, latitude, longitude);
+            
+            if(!conversionResult[0]||!conversionResult[1]){
+                //pass back failed result
+                return conversionResult;
+            } else {
+                //process successful result
+                latitude = this.constructor.radiansToDegrees(conversionResult[0]);
+                longitude = this.constructor.radiansToDegrees(conversionResult[1]);
+                return this.constructor.generateJSON(mgrsString, latitude, longitude);
+            }
         }
         else{
             console.error("Unable to convert.");
@@ -35,11 +42,13 @@ class MgrsConverter {
                 console.log(mgrsString + " is not a valid MGRS coordinate.");
             }
             else{
-                console.log("No MGRS coordinate supplied");
+                console.log("Valid MGRS coordinate not supplied");
             }
             return null;
         }
     }
+
+    
     /**
     * Simple converter from radians to degrees.
     * @param {number} radians 
