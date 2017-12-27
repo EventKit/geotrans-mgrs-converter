@@ -8,10 +8,13 @@
     "bindings": "^1.3.0",
     "express": "^4.16.2",
     "node-addon-api": "^0.6.3",
-    "setenv": "^1.0.3"
+    "setenv": "^1.0.3",
+    "node-gyp": "^3.6.2"    
+
   },
   "scripts": {
-    "preinstall": "./download_geotrans.sh"
+    "preinstall": "./download_geotrans.sh",
+    "start": ". ./opt/mgrs/setenv_native.sh; node /opt/mgrs/index.js"
   },
   "author": "Gibran Parvez",
   "license": "ISC"
