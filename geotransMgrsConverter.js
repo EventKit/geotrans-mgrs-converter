@@ -24,15 +24,16 @@ class MgrsConverter {
         let latitude, longitude;
         mgrsString = this.constructor.sanitize(mgrsString);
         if(mgrsString && this._datum && this.constructor.isValid(mgrsString)){
-            let conversionResult = this.callLibrary(mgrsString);
+            let conversionResult = this.callLibrary(mgrsString)
+            let convertedCoords = conversionResult.split(',');
             
-            if(!conversionResult[0]||!conversionResult[1]){
+            if(!convertedCoords[0]||!convertedCoords[1]){
                 //pass back failed result
                 return conversionResult;
             } else {
                 //process successful result
-                latitude = this.constructor.radiansToDegrees(conversionResult[0]);
-                longitude = this.constructor.radiansToDegrees(conversionResult[1]);
+                latitude = this.constructor.radiansToDegrees(convertedCoords[0]);
+                longitude = this.constructor.radiansToDegrees(convertedCoords[1]);
                 return this.constructor.generateJSON(mgrsString, latitude, longitude);
             }
         }
@@ -106,7 +107,7 @@ class MgrsConverter {
     * @param {string} mgrsString
     */
     callLibrary(mgrsString){ 
-        return require("./build/Release/native.node").callConvertToGeodetic(mgrsString, this._datum).split(',');
+        return require("./build/Release/native.node").callConvertToGeodetic(mgrsString, this._datum);
     }
 }
 
