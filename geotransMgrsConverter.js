@@ -45,7 +45,7 @@ class MgrsConverter {
             else{
                 console.log("Valid MGRS coordinate not supplied");
             }
-            return null;
+            return "ERROR: Invalid MGRS String";
         }
     }
 
