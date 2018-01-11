@@ -16,7 +16,7 @@ COPY . ${WORK}
 
 # install necessary tools
 RUN apt-get update && \
-    apt-get install -y python npm wget curl
+    apt-get install -y python npm wget curl vim
 
 # install node 6.x
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \

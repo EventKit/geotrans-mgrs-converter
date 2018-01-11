@@ -9,10 +9,13 @@
     "express": "^4.16.2",
     "node-addon-api": "^0.6.3",
     "node-gyp": "^3.6.2",
-    "setenv": "^1.0.3"
+    "setenv": "^1.0.3",
+    "jasmine": "^2.8.0"
   },
   "scripts": {
-    "preinstall": "./download_geotrans.sh"
+    "preinstall": "./download_geotrans.sh",
+    "postinstall": "./node_modules/.bin/jasmine init",
+    "test": "jasmine geotransMgrsConverter.spec.js"
   },
   "author": "Gibran Parvez",
   "license": "ISC"
