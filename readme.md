@@ -1,4 +1,5 @@
-Geotrans MGRS Converter
+
+Geotrans MGRS Converter:
 =======================
 
 The Geotrans MGRS Converter is a NodeJS module that utilizes the [Node-gyp](https://github.com/nodejs/node-gyp) library to call a custom MGRS-to-Geodetic-Coordinates script written using Geotrans C++ library.
@@ -6,6 +7,33 @@ The Geotrans MGRS Converter is a NodeJS module that utilizes the [Node-gyp](http
 This code has not been tested in Windows.
 
 ![Diagram](diagram.png "Diagram")
+
+
+Running via Docker:
+=======================
+
+### Requirements
+   * Docker
+   
+### Build
+
+Run `docker build -t mgrs-converter .` in the geotrans-mgrs-converter/ folder.
+
+### Run
+
+Run `docker run -it -p 3150:3150 -d mgrs-converter`
+
+### Test
+
+Call GET via browser or cURL on `localhost:3150?datum={DATUM}&coord={COORDINATE}`.
+
+**{DATUM}** = *WGE (Default, WGS84)||WGC||FOT||ARF-G||INF-A||INH-A *
+
+**{COORDINATE}** = *MGRS coordinate, expressed in (grid zone designator, GZD) +  (100 km Grid Square ID) + (Numerical Location, 2 digits minimum).*
+
+
+Running natively:
+=======================
 
 ### Requirements
    * `python` (`v2.7` recommended, `v3.x.x` is __*not*__ supported)
