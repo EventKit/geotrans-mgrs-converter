@@ -1,5 +1,5 @@
 # base image
-FROM ubuntu:latest
+FROM ubuntu:xenial
 # expose port
 EXPOSE 3150
 
