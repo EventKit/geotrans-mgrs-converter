@@ -1,0 +1,9 @@
+version: '2'
+services:
+  vendor:
+    build:
+      context: '.'
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/opt/mgrs
+    command: npm start

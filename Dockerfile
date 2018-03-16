@@ -1,5 +1,5 @@
 # base image
-FROM ubuntu:xenial
+FROM ubuntu:latest
 # expose port
 EXPOSE 3150
 
@@ -23,11 +23,7 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
     apt-get install -y nodejs
 
 # install node-gyp globally and install mgrs_converter dependencies. ignore "file already exists"
-RUN npm install node-gyp -g && \
-    npm install --unsafe-perm; exit 0;
-
-# configure and build node-gyp
-RUN node-gyp configure build
+RUN npm install --unsafe-perm; exit 0;
 
 # start service
 CMD [ "npm", "start" ]
