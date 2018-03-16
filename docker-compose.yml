@@ -1,9 +1,14 @@
 version: '2'
 services:
-  vendor:
+  geotrans:
     build:
       context: '.'
       dockerfile: Dockerfile
-    volumes:
-      - ./:/opt/mgrs
+    # if mounting volumes don't forget that you may need to reinstall the node_modules and the node-gyp binding.
+#    volumes:
+#      - ./:/opt/mgrs
     command: npm start
+    ports:
+      - "3000:3000"
+    environment:
+      port: 3000
