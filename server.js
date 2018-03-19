@@ -4,7 +4,8 @@ const app = express();
 
 app.get('/', (req, res) => res.send(convert(req)));
 
-app.listen(3150, () => console.log('GeoTrans MGRS Conversion service running at port 3150'));
+const port = process.env.PORT || '3000'
+app.listen(port, () => console.log('GeoTrans MGRS Conversion service running at port ' + port));
 
 function convert(req){
     if(req.query){

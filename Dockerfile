@@ -1,7 +1,7 @@
 # base image
-FROM ubuntu:xenial
+FROM cloudfoundry/cflinuxfs2:1.191.0
 # expose port
-EXPOSE 3150
+EXPOSE 3000
 
 # set work directory
 ENV WORK=/opt/mgrs
@@ -31,7 +31,3 @@ RUN node-gyp configure build
 
 # start service
 CMD [ "npm", "start" ]
-
-
-
-
