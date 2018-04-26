@@ -11,7 +11,7 @@ function convert(req){
     if(req.query){
         if(req.query.from === "mgrs" && req.query.to === "decdeg"){
             let mgrs = new converter(req.query.datum);
-            let result = mgrs.mgrsToDecDeg(req.query.coord);
+            let result = mgrs.mgrsToDecDeg(req.query.q);
             return result;
         }
         else if(req.query.from === "decdeg" && req.query.to === "mgrs"){
