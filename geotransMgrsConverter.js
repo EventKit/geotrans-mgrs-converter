@@ -20,11 +20,11 @@ class MgrsConverter {
      * Convert function. Primary usage of this module.
      * @param {string} mgrsString - Alpha-numeric system for expressing UTM / UPS coordinates.
      */
-    convert(mgrsString){
+    mgrsToDecDeg(mgrsString){
         let latitude, longitude;
         mgrsString = this.constructor.sanitize(mgrsString);
         if(mgrsString && this._datum && this.constructor.isValid(mgrsString)){
-            let conversionResult = this.callLibrary(mgrsString)
+            let conversionResult = require("./build/Release/native.node").callConvertToGeodetic(mgrsString, this._datum);
             let convertedCoords = conversionResult.split(',');
             
             if(!convertedCoords[0]||!convertedCoords[1]){
@@ -49,6 +49,16 @@ class MgrsConverter {
         }
     }
 
+    decDegToMgrs(latitude, longitude){
+        if((latitude > -90 && latitude < 90) && (longitude > -180 && longitude < 180) && this._datum){
+            let conversionResult = require("./build/Release/native.node").callConvertToMgrs(this.constructor.degreesToRadians(latitude), this.constructor.degreesToRadians(longitude), 1, this._datum);
+            return this.constructor.generateJSON(conversionResult, latitude, longitude);
+        }
+        else{
+            return "ERROR: Invalid Coordinate";
+        }
+    }
+
     
     /**
     * Simple converter from radians to degrees.
@@ -58,6 +68,14 @@ class MgrsConverter {
        let pi = Math.PI;
        return radians * (180/pi);
     }
+    /**
+    * Simple converter from degrees to radians.
+    * @param {number} degrees 
+    */
+    static degreesToRadians(degrees){
+        let pi = Math.PI;
+        return degrees * (pi/180);
+     }
     /**
      * GeoJSON Point generator
      */
@@ -101,13 +119,6 @@ class MgrsConverter {
     static sanitize(mgrsString){
         mgrsString.toUpperCase();
         return mgrsString.replace(/\s+/g, '');
-    }
-    /**
-    * Calls C++ function "convertToGeodetic" in mgrsToGeodetic. Values passed in from 'convert' function above.
-    * @param {string} mgrsString
-    */
-    callLibrary(mgrsString){ 
-        return require("./build/Release/native.node").callConvertToGeodetic(mgrsString, this._datum);
     }
 }
 

@@ -9,8 +9,16 @@ app.listen(port, () => console.log('GeoTrans MGRS Conversion service running at 
 
 function convert(req){
     if(req.query){
-        let mgrs = new converter(req.query.datum);
-        let result = mgrs.convert(req.query.coord);
-        return result;
+        if(req.query.from === "mgrs" && req.query.to === "decdeg"){
+            let mgrs = new converter(req.query.datum);
+            let result = mgrs.mgrsToDecDeg(req.query.coord);
+            return result;
+        }
+        else if(req.query.from === "decdeg" && req.query.to === "mgrs"){
+            let mgrs = new converter(req.query.datum);
+            let result = mgrs.decDegToMgrs(req.query.lat, req.query.lon, 1);
+            return result;
+        }
     }
+    
 }
