@@ -51,7 +51,7 @@ class MgrsConverter {
 
     decDegToMgrs(latitude, longitude){
         if((latitude > -90 && latitude < 90) && (longitude > -180 && longitude < 180) && this._datum){
-            let conversionResult = require("./build/Release/native.node").callConvertToMgrs(this.constructor.degreesToRadians(latitude), this.constructor.degreesToRadians(longitude), 1, this._datum);
+            let conversionResult = require("./build/Release/native.node").callConvertToMgrs(this.constructor.degreesToRadians(latitude), this.constructor.degreesToRadians(longitude), 0, this._datum);
             return this.constructor.generateJSON(conversionResult, latitude, longitude);
         }
         else{
