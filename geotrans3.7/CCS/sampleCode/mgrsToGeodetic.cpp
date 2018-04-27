@@ -26,8 +26,8 @@ using namespace Napi;
  * Coordinate Conversion Service, 'ccsGeocentricToGeodeticMslEgm96', to
  * convert the given x, y, z coordinates to a lat, lon, and height.
  **/
-void convertGeocentricToGeodeticMslEgm96(
-  MSP::CCS::CoordinateConversionService & ccsGeocentricToGeodeticMslEgm96,
+void convertGeocentricToEllipsoidHeight(
+  MSP::CCS::CoordinateConversionService & ccsGeocentricToEllipsoidHeight,
   double x,
   double y,
   double z,
@@ -41,7 +41,7 @@ void convertGeocentricToGeodeticMslEgm96(
   MSP::CCS::GeodeticCoordinates targetCoordinates(
     MSP::CCS::CoordinateType::geodetic, lon, lat, height);
 
-  ccsGeocentricToGeodeticMslEgm96.convertSourceToTarget( & sourceCoordinates, & sourceAccuracy,
+  ccsGeocentricToEllipsoidHeight.convertSourceToTarget( & sourceCoordinates, & sourceAccuracy,
     targetCoordinates,
     targetAccuracy);
 
@@ -167,13 +167,19 @@ MSP::CCS::CartesianCoordinates convertGeocentricToMgrs(
 std::string convertMgrsToGeodetic(std::string mgrsCoordinateInput, std::string datumInput) {
   double lat;
   double lon;
+  double mslHeight;
   const char * datum = datumInput.c_str();
   const char * mgrsCoordinate = mgrsCoordinateInput.c_str();
 
   //Parameter setup
-  MSP::CCS::GeodeticParameters mslEgm96Parameters(
+  MSP::CCS::GeodeticParameters geodeticParameters(
     MSP::CCS::CoordinateType::geodetic,
-    MSP::CCS::HeightType::EGM96FifteenMinBilinear);
+    MSP::CCS::HeightType::ellipsoidHeight);
+
+
+  MSP::CCS::GeodeticParameters ellipsoidParameters(
+    MSP::CCS::CoordinateType::geodetic,
+    MSP::CCS::HeightType::ellipsoidHeight);
 
   MSP::CCS::CoordinateSystemParameters mgrsParameters(
     MSP::CCS::CoordinateType::militaryGridReferenceSystem);
@@ -184,16 +190,16 @@ std::string convertMgrsToGeodetic(std::string mgrsCoordinateInput, std::string d
   MSP::CCS::CoordinateConversionService ccsGeocentricToMgrs(
     datum, & mgrsParameters, datum, & geocentricParameters);
 
-  MSP::CCS::CoordinateConversionService ccsGeocentricToGeodeticMslEgm96(
+  MSP::CCS::CoordinateConversionService ccsGeocentricToEllipsoidHeight(
     datum, & geocentricParameters,
-    datum, & mslEgm96Parameters);
+    datum, & ellipsoidParameters);
 
+  
   try {
     MSP::CCS::CartesianCoordinates geocentricCoords = convertGeocentricToMgrs(ccsGeocentricToMgrs, mgrsCoordinate);
-    double mslHeight;
 
-    convertGeocentricToGeodeticMslEgm96(
-      ccsGeocentricToGeodeticMslEgm96,
+    convertGeocentricToEllipsoidHeight(
+      ccsGeocentricToEllipsoidHeight,
       geocentricCoords.x(), geocentricCoords.y(), geocentricCoords.z(),
       lat, lon, mslHeight);
   } catch (MSP::CCS::CoordinateConversionException & ex) {
@@ -220,10 +226,6 @@ std::string convertGeodeticToMgrs(double lat, double lon, double mslHeight, std:
   // Coordinate System Parameters 
   //
 
-  MSP::CCS::GeodeticParameters mslEgm96Parameters(
-    MSP::CCS::CoordinateType::geodetic,
-    MSP::CCS::HeightType::EGM96FifteenMinBilinear);
-
   MSP::CCS::GeodeticParameters ellipsoidParameters(
     MSP::CCS::CoordinateType::geodetic,
     MSP::CCS::HeightType::ellipsoidHeight);
@@ -233,10 +235,6 @@ std::string convertGeodeticToMgrs(double lat, double lon, double mslHeight, std:
 
   MSP::CCS::CoordinateSystemParameters mgrsParameters(
     MSP::CCS::CoordinateType::militaryGridReferenceSystem);
-
-  MSP::CCS::CoordinateConversionService ccsMslEgm96ToEllipsoidHeight(
-    datum, & mslEgm96Parameters,
-    datum, & ellipsoidParameters);
 
   MSP::CCS::CoordinateConversionService ccsGeodeticEllipsoidToGeocentric(
     datum, & ellipsoidParameters,
@@ -248,13 +246,10 @@ std::string convertGeodeticToMgrs(double lat, double lon, double mslHeight, std:
 
   std::string outputString;
   try {
-    double x, y, z;
+    double x = 0.0; 
+    double y = 0.0; 
+    double z = 0.0;
     double height = 0.0;
-
-    convertMslEgm96ToEllipsoidHeight(
-      ccsMslEgm96ToEllipsoidHeight,
-      lat, lon, mslHeight,
-      height);
 
     convertGeodeticEllipsoidToGeocentric(
       ccsGeodeticEllipsoidToGeocentric,

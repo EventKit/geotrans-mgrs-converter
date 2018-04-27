@@ -21,7 +21,7 @@ class MgrsConverter {
      * @param {string} mgrsString - Alpha-numeric system for expressing UTM / UPS coordinates.
      */
     mgrsToDecDeg(mgrsString){
-        let latitude, longitude;
+        let latitude, longitude, height;
         mgrsString = this.constructor.sanitize(mgrsString);
         if(mgrsString && this._datum && this.constructor.isValid(mgrsString)){
             let conversionResult = require("./build/Release/native.node").callConvertToGeodetic(mgrsString, this._datum);
