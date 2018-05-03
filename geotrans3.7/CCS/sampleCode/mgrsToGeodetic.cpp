@@ -117,7 +117,7 @@ std::string convertGeocentricToMgrs(
  **/
 MSP::CCS::CartesianCoordinates convertMgrsToGeocentric(
     MSP::CCS::CoordinateConversionService& ccsGeocentricToMgrs,
-    const char * mgrsString) {
+    const char* mgrsString) {
     MSP::CCS::Accuracy sourceAccuracy;
     MSP::CCS::Accuracy targetAccuracy;
     MSP::CCS::MGRSorUSNGCoordinates sourceCoordinates(
@@ -190,7 +190,11 @@ std::string convertMgrsToGeodetic(std::string mgrsCoordinateInput, std::string d
 /**
  * Function to be wrapped with called by N-API function, taking in strings.
  **/
-std::string convertGeodeticToMgrs(double lat, double lon, double mslHeight, std::string datumInput) {
+std::string convertGeodeticToMgrs(
+  double lat, 
+  double lon, 
+  double mslHeight,
+  std::string datumInput) {
 
   const char* datum = datumInput.c_str();
   std::string outputString;
