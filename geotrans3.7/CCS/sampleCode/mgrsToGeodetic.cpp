@@ -141,8 +141,9 @@ String callConvertToGeodetic(const CallbackInfo& info)
 /**
  * Initializer
  **/
-void Init(Env env, Object exports, Object module)
+Object Init(Env env, Object exports)
 {
-    exports.Set("callConvertToGeodetic", Function::New(env, callConvertToGeodetic));
+    exports.Set(String::New(env, "callConvertToGeodetic"), Function::New(env, callConvertToGeodetic));
+    return exports;
 }
 NODE_API_MODULE(addon, Init);
