@@ -269,8 +269,11 @@ String callConvertToMgrs(const CallbackInfo& info) {
 /**
  * Initializer
  **/
-void Init(Env env, Object exports, Object module) {
-  exports.Set("callConvertToGeodetic", Function::New(env, callConvertToGeodetic));
-  exports.Set("callConvertToMgrs", Function::New(env, callConvertToMgrs));
+Object Init(Env env, Object exports)
+{
+    exports.Set(String::New(env, "callConvertToGeodetic"), Function::New(env, callConvertToGeodetic));
+    exports.Set(String::New(env, "callConvertToMgrs"), Function::New(env, callConvertToMgrs));
+    return exports;
+
 }
 NODE_API_MODULE(addon, Init);
