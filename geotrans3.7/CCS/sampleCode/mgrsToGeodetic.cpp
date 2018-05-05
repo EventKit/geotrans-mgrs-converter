@@ -1,3 +1,4 @@
+
 #include <napi.h>
 #include <ctime>
 #include <cerrno>
@@ -26,13 +27,13 @@ using namespace Napi;
  * convert the given x, y, z coordinates to a lat, lon, and height.
  **/
 void convertGeocentricToEllipsoidHeight(
-  MSP::CCS::CoordinateConversionService& ccsGeocentricToEllipsoidHeight,
+  MSP::CCS::CoordinateConversionService & ccsGeocentricToEllipsoidHeight,
   double x,
   double y,
   double z,
-  double& lat,
-  double& lon,
-  double& height) {
+  double & lat,
+  double & lon,
+  double & height) {
   MSP::CCS::Accuracy sourceAccuracy;
   MSP::CCS::Accuracy targetAccuracy;
   MSP::CCS::CartesianCoordinates sourceCoordinates(
@@ -40,7 +41,7 @@ void convertGeocentricToEllipsoidHeight(
   MSP::CCS::GeodeticCoordinates targetCoordinates(
     MSP::CCS::CoordinateType::geodetic, lon, lat, height);
 
-  ccsGeocentricToEllipsoidHeight.convertSourceToTarget( &sourceCoordinates, &sourceAccuracy,
+  ccsGeocentricToEllipsoidHeight.convertSourceToTarget( & sourceCoordinates, & sourceAccuracy,
     targetCoordinates,
     targetAccuracy);
 
@@ -50,18 +51,43 @@ void convertGeocentricToEllipsoidHeight(
 }
 
 /**
+ * Function which uses the given Geodetic (MSL EGM 96 15M) to Geodetic
+ * (Ellipsoid Height) Coordinate Conversion Service,
+ * 'ccsMslEgm96ToEllipsoidHeight', to convert the given MSL height at the
+ * given lat, lon, to an Ellipsoid height.
+ **/
+void convertMslEgm96ToEllipsoidHeight(
+  MSP::CCS::CoordinateConversionService & ccsMslEgm96ToEllipsoidHeight,
+  double lat,
+  double lon,
+  double mslHeight,
+  double & ellipsoidHeight) {
+  MSP::CCS::Accuracy sourceAccuracy;
+  MSP::CCS::Accuracy targetAccuracy;
+  MSP::CCS::GeodeticCoordinates sourceCoordinates(
+    MSP::CCS::CoordinateType::geodetic, lon, lat, mslHeight);
+  MSP::CCS::GeodeticCoordinates targetCoordinates;
+
+  ccsMslEgm96ToEllipsoidHeight.convertSourceToTarget( & sourceCoordinates, & sourceAccuracy,
+    targetCoordinates,
+    targetAccuracy);
+
+  ellipsoidHeight = targetCoordinates.height();
+}
+
+/**
  * Function which uses the given Geodetic (Ellipsoid Height) to Geocentric 
  * Coordinate Conversion Service, 'ccsGeodeticEllipsoidToGeocentric', to
  * convert the given lat, lon, and height to x, y, z coordinates.
  **/
 void convertGeodeticEllipsoidToGeocentric(
-    MSP::CCS::CoordinateConversionService& ccsGeodeticEllipsoidToGeocentric,
+    MSP::CCS::CoordinateConversionService & ccsGeodeticEllipsoidToGeocentric,
     double lat,
     double lon,
     double height,
-    double& x,
-    double& y,
-    double& z) {
+    double & x,
+    double & y,
+    double & z) {
     MSP::CCS::Accuracy sourceAccuracy;
     MSP::CCS::Accuracy targetAccuracy;
     MSP::CCS::GeodeticCoordinates sourceCoordinates(
@@ -69,7 +95,7 @@ void convertGeodeticEllipsoidToGeocentric(
     MSP::CCS::CartesianCoordinates targetCoordinates(
       MSP::CCS::CoordinateType::geocentric);
 
-    ccsGeodeticEllipsoidToGeocentric.convertSourceToTarget( &sourceCoordinates, &sourceAccuracy,
+    ccsGeodeticEllipsoidToGeocentric.convertSourceToTarget( & sourceCoordinates, & sourceAccuracy,
       targetCoordinates,
       targetAccuracy);
 
@@ -83,12 +109,12 @@ void convertGeodeticEllipsoidToGeocentric(
    * to an MGRS string and precision.
    **/
 std::string convertGeocentricToMgrs(
-  MSP::CCS::CoordinateConversionService& ccsGeocentricToMgrs,
+  MSP::CCS::CoordinateConversionService & ccsGeocentricToMgrs,
   double x,
   double y,
   double z,
-  MSP::CCS::Precision::Enum& precision) {
-  char* p;
+  MSP::CCS::Precision::Enum & precision) {
+  char * p;
   std::string mgrsString;
 
   MSP::CCS::Accuracy sourceAccuracy;
@@ -97,7 +123,7 @@ std::string convertGeocentricToMgrs(
     MSP::CCS::CoordinateType::geocentric, x, y, z);
   MSP::CCS::MGRSorUSNGCoordinates targetCoordinates;
 
-  ccsGeocentricToMgrs.convertSourceToTarget( &sourceCoordinates, &sourceAccuracy,
+  ccsGeocentricToMgrs.convertSourceToTarget( & sourceCoordinates, & sourceAccuracy,
     targetCoordinates,
     targetAccuracy);
 
@@ -107,6 +133,8 @@ std::string convertGeocentricToMgrs(
   p = targetCoordinates.MGRSString();
   mgrsString = p;
 
+  precision = targetCoordinates.precision();
+
   return mgrsString;
 }
 
@@ -115,9 +143,9 @@ std::string convertGeocentricToMgrs(
  * Service, 'ccsGeocentricToMgrs', to convert the given x, y, z coordinates
  * to an MGRS string and precision.
  **/
-MSP::CCS::CartesianCoordinates convertMgrsToGeocentric(
-    MSP::CCS::CoordinateConversionService& ccsGeocentricToMgrs,
-    const char* mgrsString) {
+MSP::CCS::CartesianCoordinates convertGeocentricToMgrs(
+    MSP::CCS::CoordinateConversionService & ccsGeocentricToMgrs,
+    const char * mgrsString) {
     MSP::CCS::Accuracy sourceAccuracy;
     MSP::CCS::Accuracy targetAccuracy;
     MSP::CCS::MGRSorUSNGCoordinates sourceCoordinates(
@@ -125,7 +153,7 @@ MSP::CCS::CartesianCoordinates convertMgrsToGeocentric(
     MSP::CCS::CartesianCoordinates targetCoordinates(
       MSP::CCS::CoordinateType::geocentric);
 
-    ccsGeocentricToMgrs.convertSourceToTarget( &sourceCoordinates, &sourceAccuracy,
+    ccsGeocentricToMgrs.convertSourceToTarget( & sourceCoordinates, & sourceAccuracy,
       targetCoordinates,
       targetAccuracy);
     // Returned value, 'p', points to targetCoordinate's internal character
@@ -140,8 +168,8 @@ std::string convertMgrsToGeodetic(std::string mgrsCoordinateInput, std::string d
   double lat;
   double lon;
   double mslHeight;
-  const char* datum = datumInput.c_str();
-  const char* mgrsCoordinate = mgrsCoordinateInput.c_str();
+  const char * datum = datumInput.c_str();
+  const char * mgrsCoordinate = mgrsCoordinateInput.c_str();
 
   //Parameter setup
   MSP::CCS::GeodeticParameters geodeticParameters(
@@ -160,21 +188,21 @@ std::string convertMgrsToGeodetic(std::string mgrsCoordinateInput, std::string d
     MSP::CCS::CoordinateType::geocentric);
 
   MSP::CCS::CoordinateConversionService ccsGeocentricToMgrs(
-    datum, &mgrsParameters, datum, &geocentricParameters);
+    datum, & mgrsParameters, datum, & geocentricParameters);
 
   MSP::CCS::CoordinateConversionService ccsGeocentricToEllipsoidHeight(
-    datum, &geocentricParameters,
-    datum, &ellipsoidParameters);
+    datum, & geocentricParameters,
+    datum, & ellipsoidParameters);
 
   
   try {
-    MSP::CCS::CartesianCoordinates geocentricCoords = convertMgrsToGeocentric(ccsGeocentricToMgrs, mgrsCoordinate);
+    MSP::CCS::CartesianCoordinates geocentricCoords = convertGeocentricToMgrs(ccsGeocentricToMgrs, mgrsCoordinate);
 
     convertGeocentricToEllipsoidHeight(
       ccsGeocentricToEllipsoidHeight,
       geocentricCoords.x(), geocentricCoords.y(), geocentricCoords.z(),
       lat, lon, mslHeight);
-  } catch (MSP::CCS::CoordinateConversionException& ex) {
+  } catch (MSP::CCS::CoordinateConversionException & ex) {
     std::string exceptionString(ex.getMessage());
     std::string outputString = "ERROR: " + exceptionString;
     return outputString;
@@ -190,14 +218,10 @@ std::string convertMgrsToGeodetic(std::string mgrsCoordinateInput, std::string d
 /**
  * Function to be wrapped with called by N-API function, taking in strings.
  **/
-std::string convertGeodeticToMgrs(
-  double lat, 
-  double lon, 
-  double mslHeight,
-  std::string datumInput) {
+std::string convertGeodeticToMgrs(double lat, double lon, double mslHeight, std::string datumInput) {
 
-  const char* datum = datumInput.c_str();
-  std::string outputString;
+  const char * datum = datumInput.c_str();
+
   //
   // Coordinate System Parameters 
   //
@@ -213,14 +237,14 @@ std::string convertGeodeticToMgrs(
     MSP::CCS::CoordinateType::militaryGridReferenceSystem);
 
   MSP::CCS::CoordinateConversionService ccsGeodeticEllipsoidToGeocentric(
-    datum, &ellipsoidParameters,
-    datum, &geocentricParameters);
+    datum, & ellipsoidParameters,
+    datum, & geocentricParameters);
 
   MSP::CCS::CoordinateConversionService ccsGeocentricToMgrs(
-    datum, &geocentricParameters,
-    datum, &mgrsParameters);
+    datum, & geocentricParameters,
+    datum, & mgrsParameters);
 
-
+  std::string outputString;
   try {
     double x = 0.0; 
     double y = 0.0; 
@@ -234,12 +258,11 @@ std::string convertGeodeticToMgrs(
 
     MSP::CCS::Precision::Enum precision;
 
-    std::string outputString = convertGeocentricToMgrs(
+    outputString = convertGeocentricToMgrs(
       ccsGeocentricToMgrs,
       x, y, z,
       precision);
-    
-  } catch (MSP::CCS::CoordinateConversionException& ex) {
+  } catch (MSP::CCS::CoordinateConversionException & ex) {
     std::string exceptionString(ex.getMessage());
     std::string outputString = "ERROR: " + exceptionString;
     return outputString;
@@ -247,7 +270,6 @@ std::string convertGeodeticToMgrs(
     std::string outputString = "ERROR: Unexpected exception encountered.";
     return outputString;
   }
-  
   return outputString;
 
 }
