@@ -33,3 +33,7 @@ function convert(req, res){
         res.status(422).send({'errors': 'coordinate type not supported'});
     }
 }
+
+module.exports = { 
+    convert: convert
+};
