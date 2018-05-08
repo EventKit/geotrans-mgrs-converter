@@ -1,15 +1,13 @@
 /** 
- * Geotrans MGRS Converter
+ * Geotrans Converter
  * @module geotransMgrsConverter
  * @author Gibran Parvez
- * Last updated: 11/14/2017
+ * Last updated: 05/08/2018
  */
-"use strict";
-//const setenv= require('setenv');
-const native = require('bindings')('native');
-//Required by mgrsToGeodetic.cpp for ellipsoid reference data
-//setenv.set('MSPCCS_DATA', 'geotrans3.7/data');
 
+"use strict";
+
+const native = require('bindings')('native');
 
 class MgrsConverter {
     constructor(datum){
@@ -49,6 +47,12 @@ class MgrsConverter {
         }
     }
 
+    /**
+     * Convert function. Primary usage of this module.
+     * @param {number} latitude - Alpha-numeric system for expressing geodetic latitude coordinate.
+     * @param {number} longitude - Alpha-numeric system for expressing geodetic longitude coordinate.
+     * @return {object} - geojson object featuring calculated MGRS string as property.
+     */
     decDegToMgrs(latitude, longitude){
         if((latitude > -90 && latitude < 90) && (longitude > -180 && longitude < 180) && this._datum){
             let conversionResult = require("./build/Release/native.node").callConvertToMgrs(this.constructor.degreesToRadians(latitude), this.constructor.degreesToRadians(longitude), 0, this._datum);
