@@ -9,11 +9,14 @@ matrix:
 env:
   global:
     - BUILD_LEADER_ID=2
+    - LD_LIBRARY_PATH=/opt/mgrs/geotrans3.7/CCS/linux_64
+    - MSPCCS_DATA=/opt/mgrs/geotrans3.7/data
 script: npm run travis
 before_install:
   - npm i -g npm
 before_script:
-  - npm prune
+  - npm install node-gyp -g && npm install --unsafe-perm; exit 0;
+  - node-gyp configure build
 branches:
   only:
   - master
