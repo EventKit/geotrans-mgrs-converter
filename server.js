@@ -4,11 +4,14 @@ const app = express();
 
 app.get('/', (req, res) => res.send(convert(req)));
 
-const port = process.env.PORT || '3000'
+const port = process.env.PORT || '3000';
 app.listen(port, () => console.log('GeoTrans MGRS Conversion service running at port ' + port));
 
 function convert(req){
     if(req.query){
+        if(!req.query.datum){
+            req.query.datum = 'WGE';
+        }
         if(req.query.from === "mgrs" && req.query.to === "decdeg"){
             let mgrs = new converter(req.query.datum);
             let result = mgrs.mgrsToDecDeg(req.query.q);
