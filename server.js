@@ -19,7 +19,7 @@ function convert(req){
         }
         else if(req.query.from === "decdeg" && req.query.to === "mgrs"){
             let mgrs = new converter(req.query.datum);
-            let result = mgrs.decDegToMgrs(req.query.lat, req.query.lon, 1);
+            let result = mgrs.decDegToMgrs(req.query.lat, req.query.lon, 0);
             return result;
         }
     }
