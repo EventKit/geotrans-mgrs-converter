@@ -29,17 +29,18 @@ std::string convertMgrsToGeodetic(std::string mgrs, std::string datumInput) {
 
   MSP::CCS::GeodeticParameters geodeticParameters(
     MSP::CCS::CoordinateType::geodetic,
-    MSP::CCS::HeightType::ellipsoidHeight);
+    MSP::CCS::HeightType::noHeight);
 
   MSP::CCS::GeodeticParameters ellipsoidParameters(
     MSP::CCS::CoordinateType::geodetic,
-    MSP::CCS::HeightType::ellipsoidHeight);
+    MSP::CCS::HeightType::noHeight);
 
   MSP::CCS::CoordinateSystemParameters mgrsParameters(
     MSP::CCS::CoordinateType::militaryGridReferenceSystem);
 
   MSP::CCS::CoordinateSystemParameters geocentricParameters(
     MSP::CCS::CoordinateType::geocentric);
+
 
   MSP::CCS::CoordinateConversionService ccsGeocentricToMgrs(
     datum, & mgrsParameters, datum, & geocentricParameters);
@@ -89,7 +90,7 @@ std::string convertGeodeticToMgrs(double lat, double lon, double mslHeight, std:
 
   MSP::CCS::GeodeticParameters ellipsoidParameters(
     MSP::CCS::CoordinateType::geodetic,
-    MSP::CCS::HeightType::ellipsoidHeight);
+    MSP::CCS::HeightType::noHeight);
 
   MSP::CCS::CoordinateSystemParameters geocentricParameters(
     MSP::CCS::CoordinateType::geocentric);

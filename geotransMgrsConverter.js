@@ -32,8 +32,8 @@ class MgrsConverter {
                 return conversionResult;
             } else {
                 //process successful result
-                latitude = this.constructor.radiansToDegrees(convertedCoords[0]);
-                longitude = this.constructor.radiansToDegrees(convertedCoords[1]);
+                latitude = this.constructor.precisionRound(this.constructor.radiansToDegrees(convertedCoords[0]), 5);
+                longitude = this.constructor.precisionRound(this.constructor.radiansToDegrees(convertedCoords[1]), 5);
                 return this.constructor.generateJSON(mgrsString, latitude, longitude);
             }
         }
@@ -50,15 +50,32 @@ class MgrsConverter {
     }
 
     decDegToMgrs(latitude, longitude){
+        latitude = this.constructor.precisionRound(latitude, 5);
+        longitude = this.constructor.precisionRound(longitude, 5);
         if((latitude > -90 && latitude < 90) && (longitude > -180 && longitude < 180) && this._datum){
-            let conversionResult = require("./build/Release/native.node").callConvertToMgrs(this.constructor.degreesToRadians(latitude), this.constructor.degreesToRadians(longitude), 0, this._datum);
+            let conversionResult = require("./build/Release/native.node").callConvertToMgrs(
+                this.constructor.degreesToRadians(latitude), 
+                this.constructor.degreesToRadians(longitude), 
+                0, 
+                this._datum);
+
             return this.constructor.generateJSON(conversionResult, latitude, longitude);
         }
         else{
             return "ERROR: Invalid Coordinate";
         }
     }
-
+    /**
+    * Emulate rounding to the same precision as the Geotrans Java spp.
+    * @param {number} radians 
+    */
+    static precisionRound(number, precision) {
+        var shift = function (number, precision) {
+          var numArray = ("" + number).split("e");
+          return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+        };
+        return shift(Math.round(shift(number, +precision)), -precision).toFixed(precision);
+    }
     
     /**
     * Simple converter from radians to degrees.
@@ -84,7 +101,7 @@ class MgrsConverter {
             'type':'Feature',
             'geometry':{
                 'type':'Point',
-                'coordinates': [longitude, latitude]
+                'coordinates': [parseFloat(longitude), parseFloat(latitude)]
             },
             'properties':{
                 'name':mgrsString
