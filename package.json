@@ -15,7 +15,7 @@
   "scripts": {
     "preinstall": "./download_geotrans.sh && npm install node-gyp -g",
     "postinstall": "./node_modules/.bin/jasmine init && node-gyp configure build",
-    "test": "jasmine geotransMgrsConverter.spec.js",
+    "test": "jasmine geotransMgrsConverter.spec.js utils.spec.js",
     "travis": "npm test"
   },
   "author": "Gibran Parvez",
