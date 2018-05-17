@@ -9,7 +9,7 @@ describe("Geotrans MGRS Converter Tests", ()=>{
             type: 'Feature',
             geometry: {
                 type: 'Point',
-                coordinates: [-72.57553258519015, 42.367593344066776]
+                coordinates: [-72.57553, 42.36759]
             },
             properties: {
                 name: '18TXM9963493438'
@@ -45,10 +45,10 @@ describe("Geotrans MGRS Converter Tests", ()=>{
             type: 'Feature',
             geometry: {
                 type: 'Point',
-                coordinates: [-72.57553258519015, 42.367593344066776]
+                coordinates: [-72.57553, 42.36759]
             },
             properties: {
-                name: '18TXM9963493438'
+                name: '18TXM9963493437'
             }
         };
 

@@ -15,14 +15,29 @@ app.use(sanitize);
 app.get('/', convert);
 app.listen(port, () => console.log('GeoTrans Conversion service running at port ' + port));
 
+
 /**
      * Convert function. Determines which Geotrans conversion to perform based on given REST coordinates.
      * @param {object} req - Express request
      * @param {object} res - Express response
 */
-function convert(req, res){
-    if(!req.query.datum){
-        req.query.datum = 'WGE';
+
+function convert(req){
+    if(req.query){
+        if(!req.query.datum){
+            req.query.datum = 'WGE';
+        }
+        if(req.query.from === "mgrs" && req.query.to === "decdeg"){
+            let mgrs = new converter(req.query.datum);
+            let result = mgrs.mgrsToDecDeg(req.query.q);
+            return result;
+        }
+        else if(req.query.from === "decdeg" && req.query.to === "mgrs"){
+            let mgrs = new converter(req.query.datum);
+            let result = mgrs.decDegToMgrs(req.query.lat, req.query.lon, 0);
+            return result;
+        }
+
     }
     let converterInstance = new converter(req.query.datum);
     if(req.query.from === "mgrs" && req.query.to === "decdeg"){
