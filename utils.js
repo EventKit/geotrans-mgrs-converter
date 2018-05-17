@@ -12,7 +12,7 @@
 */
 function sanitize (req, res, next) {
     let invalid = [];
-    if(req.query.from && req.query.to && req.query.datum){
+    if(req.query.from && req.query.to){
         if(req.query.from === "mgrs" && req.query.to === "decdeg"){
             if(!req.query.q){
                 invalid.push('q');
@@ -45,9 +45,6 @@ function sanitize (req, res, next) {
         }
         if(!req.query.to){
             invalid.push('to');
-        }
-        if(!req.query.datum){
-            invalid.push('datum');
         }
         res.status(422).send(errorGenerator(invalid));
     }
