@@ -20,11 +20,11 @@ class MgrsConverter {
      * Convert function. Primary usage of this module.
      * @param {string} mgrsString - Alpha-numeric system for expressing UTM / UPS coordinates.
      */
-    convert(mgrsString){
-        let latitude, longitude;
+    mgrsToDecDeg(mgrsString){
+        let latitude, longitude, height;
         mgrsString = this.constructor.sanitize(mgrsString);
         if(mgrsString && this._datum && this.constructor.isValid(mgrsString)){
-            let conversionResult = this.callLibrary(mgrsString)
+            let conversionResult = require("./build/Release/native.node").callConvertToGeodetic(mgrsString, this._datum);
             let convertedCoords = conversionResult.split(',');
             
             if(!convertedCoords[0]||!convertedCoords[1]){
@@ -32,8 +32,8 @@ class MgrsConverter {
                 return conversionResult;
             } else {
                 //process successful result
-                latitude = this.constructor.radiansToDegrees(convertedCoords[0]);
-                longitude = this.constructor.radiansToDegrees(convertedCoords[1]);
+                latitude = this.constructor.precisionRound(this.constructor.radiansToDegrees(convertedCoords[0]), 5);
+                longitude = this.constructor.precisionRound(this.constructor.radiansToDegrees(convertedCoords[1]), 5);
                 return this.constructor.generateJSON(mgrsString, latitude, longitude);
             }
         }
@@ -49,6 +49,33 @@ class MgrsConverter {
         }
     }
 
+    decDegToMgrs(latitude, longitude){
+        latitude = this.constructor.precisionRound(latitude, 5);
+        longitude = this.constructor.precisionRound(longitude, 5);
+        if((latitude > -90 && latitude < 90) && (longitude > -180 && longitude < 180) && this._datum){
+            let conversionResult = require("./build/Release/native.node").callConvertToMgrs(
+                this.constructor.degreesToRadians(latitude), 
+                this.constructor.degreesToRadians(longitude), 
+                0, 
+                this._datum);
+
+            return this.constructor.generateJSON(conversionResult, latitude, longitude);
+        }
+        else{
+            return "ERROR: Invalid Coordinate";
+        }
+    }
+    /**
+    * Emulate rounding to the same precision as the Geotrans Java spp.
+    * @param {number} radians 
+    */
+    static precisionRound(number, precision) {
+        var shift = function (number, precision) {
+          var numArray = ("" + number).split("e");
+          return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + precision) : precision));
+        };
+        return shift(Math.round(shift(number, +precision)), -precision).toFixed(precision);
+    }
     
     /**
     * Simple converter from radians to degrees.
@@ -59,6 +86,14 @@ class MgrsConverter {
        return radians * (180/pi);
     }
     /**
+    * Simple converter from degrees to radians.
+    * @param {number} degrees 
+    */
+    static degreesToRadians(degrees){
+        let pi = Math.PI;
+        return degrees * (pi/180);
+     }
+    /**
      * GeoJSON Point generator
      */
     static generateJSON(mgrsString, latitude, longitude){
@@ -66,7 +101,7 @@ class MgrsConverter {
             'type':'Feature',
             'geometry':{
                 'type':'Point',
-                'coordinates': [longitude, latitude]
+                'coordinates': [parseFloat(longitude), parseFloat(latitude)]
             },
             'properties':{
                 'name':mgrsString
@@ -101,13 +136,6 @@ class MgrsConverter {
     static sanitize(mgrsString){
         mgrsString.toUpperCase();
         return mgrsString.replace(/\s+/g, '');
-    }
-    /**
-    * Calls C++ function "convertToGeodetic" in mgrsToGeodetic. Values passed in from 'convert' function above.
-    * @param {string} mgrsString
-    */
-    callLibrary(mgrsString){ 
-        return require("./build/Release/native.node").callConvertToGeodetic(mgrsString, this._datum);
     }
 }
 

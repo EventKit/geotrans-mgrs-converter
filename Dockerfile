@@ -9,6 +9,7 @@ ENV WORK=/opt/mgrs
 # set geotrans environment variables
 ENV LD_LIBRARY_PATH=/opt/mgrs/geotrans3.7/CCS/linux_64
 ENV MSPCCS_DATA=/opt/mgrs/geotrans3.7/data
+ENV MSPCCS_USE_LEGACY_GEOTRANS=true
 
 # set workdir
 WORKDIR ${WORK}
