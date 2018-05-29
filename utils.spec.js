@@ -23,7 +23,7 @@ describe("Utilities tests", ()=> {
                         'to':'mgrs'
                     };
                 sanitize(req,res,null);
-                expect(errorReceived.errors).toBe('invalid or missing parameter: datum');
+                expect(errorReceived.errors).toBe('invalid or missing parameter: lat, lon');
             });
             it('should fail if to not given', () => {
                 req.query = {

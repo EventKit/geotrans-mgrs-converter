@@ -11,14 +11,14 @@
      * @param {function} next - Next function down the chain to be called.
 */
 function sanitize (req, res, next) {
-    let invalid = [];
+    let invalidParams = [];
     if(req.query.from && req.query.to){
         if(req.query.from === "mgrs" && req.query.to === "decdeg"){
             if(!req.query.q){
-                invalid.push('q');
+                invalidParams.push('q');
             }
-            if(invalid.length > 0){
-                res.status(422).send(errorGenerator(invalid));
+            if(invalidParams.length > 0){
+                res.status(422).send(errorGenerator(invalidParams));
             }
             else{
                 next();
@@ -26,13 +26,13 @@ function sanitize (req, res, next) {
         }
         else{
             if(!req.query.lat){
-                invalid.push('lat');
+                invalidParams.push('lat');
             }
             if(!req.query.lon){
-                invalid.push('lon');
+                invalidParams.push('lon');
             }
-            if(invalid.length > 0){
-                res.status(422).send(errorGenerator(invalid));
+            if(invalidParams.length > 0){
+                res.status(422).send(errorGenerator(invalidParams));
             }
             else{
                 next();
@@ -41,24 +41,40 @@ function sanitize (req, res, next) {
     }
     else{
         if(!req.query.from){
-            invalid.push('from');
+            invalidParams.push('from');
         }
         if(!req.query.to){
-            invalid.push('to');
+            invalidParams.push('to');
         }
-        res.status(422).send(errorGenerator(invalid));
+        res.status(422).send(errorGenerator(invalidParams));
     }
     
+}
+
+function validate(res, result){
+    if(!result.geometry){
+        res.status(422).send(errorGenerator([], result));
+    }
+    else{
+        res.send(result);
+    }
 }
 
 /**
      * Return object to contain errors separated by comma.
      * @param {array} params - List of parameter errors
 */
-function errorGenerator(params){
-    return { 'errors': 'invalid or missing parameter: ' + params.join(', ')};
+function errorGenerator(params, error){
+    if(params.length > 0){
+        return { 'errors': 'invalid or missing parameter: ' + params.join(', ')};
+    }
+    else{
+        return { 'errors': error };
+    }
+    
 }
 
 module.exports = {
-    sanitize: sanitize
+    sanitize: sanitize,
+    validate: validate
 };
