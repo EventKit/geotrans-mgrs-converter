@@ -53,7 +53,7 @@ function sanitize (req, res, next) {
 
 function validate(res, result){
     if(!result.geometry){
-        res.status(422).send(errorGenerator([], result));
+        res.status(400).send(errorGenerator([], result));
     }
     else{
         res.send(result);
