@@ -21,7 +21,7 @@
   "author": "Gibran Parvez",
   "license": "ISC",
   "engines": {
-    "node": "6.11.x",
+    "node": "^6.11.x",
     "npm": "3.10.x"
   }
 }
