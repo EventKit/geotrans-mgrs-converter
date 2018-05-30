@@ -34,7 +34,7 @@ describe("Geotrans MGRS Converter Tests", ()=>{
         });
     });
     describe("An invalid MGRS coordinate returns an error from Geotrans", () => {
-        let invalidReturn = 'ERROR: Invalid MGRS String';
+        let invalidReturn = 'invalid MGRS string';
         it("should return expected error from JS checker", ()=> {
             expect(converterInstance.mgrsToDecDeg("4CFG")).toEqual(invalidReturn);
         });
@@ -57,7 +57,7 @@ describe("Geotrans MGRS Converter Tests", ()=>{
         });
     });
     describe("An invalid decimal degree coordinate returns an error from Geotrans", () => {
-        let invalidReturn = 'ERROR: Invalid Coordinate';
+        let invalidReturn = 'invalid decimal degree coordinate';
         it("should return expected error from JS", ()=> {
             expect(converterInstance.decDegToMgrs(-181, -72)).toEqual(invalidReturn);
         });

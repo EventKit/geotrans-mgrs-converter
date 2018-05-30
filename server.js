@@ -7,6 +7,7 @@
 const converter = require("./geotransMgrsConverter"),
     express = require('express'),
     sanitize = require('./utils').sanitize,
+    validate = require('./utils').validate,
     app = express(),
     port = process.env.PORT || '3000';
 
@@ -30,10 +31,11 @@ function convert(req, res){
         let mgrs = new converter(req.query.datum);
         if(req.query.from === "mgrs" && req.query.to === "decdeg"){
             let result = mgrs.mgrsToDecDeg(req.query.q);
-            res.send(result);
+            validate(res, result);
         }
         else if(req.query.from === "decdeg" && req.query.to === "mgrs"){
             let result = mgrs.decDegToMgrs(req.query.lat, req.query.lon, 0);
+            validate(res, result);
             res.send(result);
         }
         else{

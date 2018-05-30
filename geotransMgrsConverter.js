@@ -43,7 +43,7 @@ class MgrsConverter {
             else{
                 console.log("Valid MGRS coordinate not supplied");
             }
-            return "ERROR: Invalid MGRS String";
+            return "invalid MGRS string";
         }
     }
 
@@ -66,7 +66,7 @@ class MgrsConverter {
             return this.constructor.generateJSON(conversionResult, latitude, longitude);
         }
         else{
-            return "ERROR: Invalid Coordinate";
+            return "invalid decimal degree coordinate";
         }
     }
     /**
